@@ -1,0 +1,155 @@
+# Kingsway Jiu-Jitsu: knowledge file for the email agent
+# Sources: kingswayjiujitsu.com (2026-09-24, re-checked 2026-10-21 on Gymdesk site), Kingsway pricing guide PDF, Elias
+# The agent must quote prices, times and policies ONLY from this file.
+
+school:
+  name: Kingsway Jiu-Jitsu
+  address: 13776 N Hwy 183, Unit #122, Austin, TX 78750
+  phone: 737-428-7444 (call or text)   # site footer/signup page show 806-206-0176; confirm which is current
+  email: admin@kingswayjiujitsu.com
+  instagram: "@kingsway_hq"
+  website: https://kingswayjiujitsu.com
+  area: North Austin off Hwy 183; easy drive from Cedar Park.
+  parking: Free parking right out front (we're in a strip mall).
+  lodging: There are several hotels in the area. Don't recommend a specific one.
+
+hours:
+  mon_fri: 6:00am - 8:30pm
+  sat: 8:30am - 12:00pm
+  sun: 9:30am - 12:00pm
+
+instructors:
+  head: [John Danaher (founder), Gordon Ryan, Garry Tonon]
+  staff: [Nicholas Meregali, Giancarlo Bodoni, Helena Crevar, Luke Griffith,
+          Reese LaFever, Landon Elmore, Silas Dubelaar]
+  who_teaches:
+    pro_classes: John Danaher (all pro classes, weekday and weekend)
+    advanced_nogi_7pm: Garry Tonon
+    kids_and_teens: Reese LaFever and Landon Elmore
+    weekend_adult_classes: Helena Crevar or Reese LaFever (varies)
+    everything_else: Not fixed. Don't name an instructor.
+
+programs:
+  kids:
+    ages: 4-8
+    format: always gi
+  teens:
+    ages: 9-15
+    format: gi Mon/Wed/Fri, no-gi Tue/Thu
+  beginner:
+    level: white to blue belt (all levels welcome)
+  advanced:
+    format: separate gi and no-gi classes
+  pro_session:
+    who: professional competition athletes only; taught by John Danaher
+    rule: Austin-area cross-trainers not allowed; out-of-town visitors allowed
+
+schedule:
+  mon_wed_fri:
+    - 6:00am   Beginner (Gi)
+    - 7:00-8:30am  Advanced (Gi)
+    - 9:00am   Pro (No-Gi)
+    - 12:30pm  Pro (No-Gi)
+    - 4:00pm   Kids (Gi)
+    - 5:00pm   Teens (Gi)
+    - 6:00pm   Beginner (Gi)
+    - 7:00-8:30pm  Advanced (No-Gi), taught by Garry Tonon
+  tue_thu:
+    - 6:00am   Beginner (Gi)
+    - 7:00-8:30am  Advanced (Gi)
+    - 9:00am   Pro (No-Gi)
+    - 12:30pm  Pro (No-Gi)
+    - 4:00pm   Kids (Gi)
+    - 5:00pm   Teens (No-Gi)
+    - 6:00pm   Beginner (No-Gi)
+    - 7:00-8:30pm  Advanced (No-Gi), taught by Garry Tonon
+  saturday:
+    - 8:30am   Kids & Teens Mixed (Gi)
+    - 9:30am   Beginner (Gi)
+    - 10:30am  Advanced/Pro (No-Gi)
+  sunday:
+    - 9:30am   Beginner (Gi)
+    - 10:30am  Advanced/Pro (No-Gi)
+
+pricing:   # billed every 14 days. Always quote "per 14 days", never "per month".
+  adults:
+    3x_week: $175 / 14 days (3 sessions/week)
+    unlimited: $200 / 14 days (all programs)
+    year_upfront: $4,400 / year (unlimited, all programs)
+  kids_and_teens:   # teens use the same plans as kids
+    1x_week: $75 / 14 days
+    3x_week: $112 / 14 days
+    unlimited: $125 / 14 days
+  payment_method: Bank debit (set up during online signup)
+  note: Homepage monthly prices (adults $350/$400, kids $150/$225/$250 per month) are outdated. Never quote them; always use the per-14-day prices above.
+
+trials:
+  kids_and_teens:
+    first_class: Free (one-class trial)
+    single_class_after_trial: $35   # from signup form; confirm
+    1_week: $40
+    2_weeks: $80
+    other_lengths: Not listed. Escalate.
+  adult_passes:   # for adults new to Kingsway; all passes include access to all programs
+    1_class: $75 (one class)
+    1_day: $125 (unlimited classes that day)
+    1_week: $225
+    2_weeks: $300
+    3_weeks: $350
+    1_month_unlimited: $400
+  drop_in: $75 for one class, or $125 for unlimited classes that day.
+  how_to_book:
+    adults_drop_in_or_trial: https://kingswayjiujitsu.com/signup/v/6znJo
+    kids_and_teens: Sign up or drop in onsite at the front desk (no online signup for kids).
+
+waiver:
+  adults: Included in the online signup/drop-in form, so signing up online covers it. Can also be signed onsite.
+  minors: A parent or guardian signs for anyone under 18 (onsite for kids).
+
+signup:
+  adult_membership: https://kingswayjiujitsu.com/signup/v/ARwYY
+  kids_and_teens_membership: Onsite at the front desk only.
+
+discounts:
+  veterans_first_responders: 20% off all memberships (active or retired; proof of service required)
+  family: 10% off the 2nd member, 20% off the 3rd, 30% off the 4th and beyond (max 30%)
+  stacking: Unknown. Escalate if someone asks to combine discounts.
+
+policies:
+  contract: Month-to-month for members
+  freezes: Minimum 6 weeks, up to 90 days at a time, max 2 freezes per 12 months. Submit the freeze request form at least 30 days ahead. $10/month while frozen.
+  cancellations: Escalate. Don't draft.   # (for staff: per waiver, cancellation fee = 30 days of tuition via cancellation form; penalty-free if moving 20+ miles away with proof)
+  late_payment: $20 late fee for payments more than 5 days late; $25 returned payment fee.
+  equipment: Minors can't use the weight station or other equipment without an additional signed waiver.
+
+attire:
+  gi: White gi (black belts and above may wear black; women may wear pink). Black or white rash guard under the gi.
+  no_gi: Rash guard and shorts must be at least 80% black or 80% white. Logos/accents OK.
+  not_allowed: T-shirts, baggy clothes, pockets, zippers. Men can't wear spats/compression shorts without shorts over them.
+  gear: Kingsway gear not required. Black and white attire available for purchase at the gym for visitors or anyone who forgets.
+  for_sale_at_gym:
+    gi: $145 each, adult sizes A0-A5
+    rash_guard: $60 each, sizes S-XXL
+    note: Don't promise a specific size is in stock. Kids sizes aren't listed; escalate kids gear questions.
+  pros: Professional athletes may wear any attire during pro sessions.
+
+private_lessons:
+  gordon_ryan:
+    how: Email privateswithgordon@kingswayjiujitsu.com. Draft a short reply pointing them there.
+    include_in_reply: That address is Gordon's personal email. If he doesn't respond right away, it's because he travels to teach and doesn't always know his upcoming schedule, but he'll respond at his earliest convenience.
+  other_instructors: Escalate.
+
+always_escalate:   # agent labels "Needs Review" and does not draft
+  - billing disputes, refunds, cancellations
+  - injuries or medical questions
+  - complaints
+  - private lesson requests with anyone other than Gordon, and all seminar requests
+  - media, sponsorship, or business inquiries
+  - pro session access requests
+  - combining discounts
+
+reply_style:
+  tone: Direct but kind. Answer the question first, keep it short, then point to the next step (trial pass or booking).
+  sign_off: |
+    Best,
+    Kingsway Team
