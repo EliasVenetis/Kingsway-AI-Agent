@@ -41,6 +41,7 @@ python main.py test-gmail            # Phase 1: confirm Gmail access (opens brow
 python main.py run --dry-run         # see what the agent WOULD do; touches nothing in Gmail
 python main.py run                   # create drafts + labels for real
 python main.py run --loop --every 5  # keep checking every 5 minutes
+python main.py learn --days 365      # one-time: learn from the past year of replies
 ```
 
 Options: `--limit 10` (emails per run), `--days 2` (how far back to look).
@@ -53,13 +54,17 @@ Options: `--limit 10` (emails per run), `--days 2` (how far back to look).
 | `agent.py` | System prompt, tools, Claude tool-use loop |
 | `gmail_client.py` | Gmail auth, reading, labels, reply drafts |
 | `db.py` | SQLite log of every decision (`agent_log.db`) |
+| `learning.py` | Learns from replies your team sends; finds similar past replies |
+| `state_sync.py` | Cloud only: saves/loads the agent's memory in Cloud Storage |
+| `deploy.sh` / `DEPLOY.md` | Deploy to Google Cloud, runs every 10 minutes |
 | `school_info.yaml` | Knowledge base. Edit this when prices or the schedule change |
 
 ## Roadmap
 
 - [ ] Eval set: ~50 labeled emails + accuracy script
-- [ ] Learn from past replies: pull sent threads, retrieve similar examples as style guides
-- [ ] Feedback loop: compare drafts to what was actually sent
-- [ ] Gymdesk booking link in replies
-- [ ] Deploy to Cloud Run + Cloud Scheduler; Gmail push notifications
+- [x] Learn from past replies: pull sent threads, retrieve similar examples
+- [x] Feedback loop: learns from replies staff send (incl. edited drafts)
+- [x] Gymdesk booking links in replies
+- [x] Deploy to Cloud Run + Cloud Scheduler with persistent memory
+- [ ] Gmail push notifications instead of polling
 - [ ] Daily summary email

@@ -12,6 +12,7 @@ from googleapiclient.discovery import build
 
 # modify = read, label, and create drafts. It cannot permanently delete mail.
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
+RETRIES = 7  # auto-retry with backoff (~2 min) if Gmail says "slow down"
 
 
 def _decode(data: str) -> str:
@@ -44,10 +45,12 @@ def extract_body(payload: dict) -> str:
 
 
 class GmailClient:
-    def __init__(self, credentials_path="credentials.json", token_path="token.json"):
+    def __init__(self, credentials_path=None, token_path=None):
+        credentials_path = credentials_path or os.getenv("CREDENTIALS_PATH", "credentials.json")
+        token_path = token_path or os.getenv("TOKEN_PATH", "token.json")
         creds = self._authenticate(credentials_path, token_path)
         self.service = build("gmail", "v1", credentials=creds, cache_discovery=False)
-        self.me = self.service.users().getProfile(userId="me").execute()["emailAddress"]
+        self.me = self.service.users().getProfile(userId="me").execute(num_retries=RETRIES)["emailAddress"]
         self._label_ids: dict[str, str] = {}
 
     # ---------- auth ----------
@@ -63,25 +66,34 @@ class GmailClient:
                 except Exception:
                     creds = None  # token revoked/expired (e.g. 7-day testing limit) -> log in again
             if not creds or not creds.valid:
+                if os.getenv("HEADLESS"):
+                    # In the cloud there's no browser to log in with.
+                    raise RuntimeError(
+                        "Gmail token is missing or revoked. Run `python main.py test-gmail` "
+                        "on your laptop, then re-upload token.json (see DEPLOY.md)."
+                    )
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
                 creds = flow.run_local_server(port=0)
-            with open(token_path, "w") as f:
-                f.write(creds.to_json())
+            try:
+                with open(token_path, "w") as f:
+                    f.write(creds.to_json())
+            except OSError:
+                pass  # read-only in the cloud; the refresh token still works next run
         return creds
 
     # ---------- reading ----------
     def list_message_ids(self, query: str, max_results: int = 20) -> list[str]:
         resp = self.service.users().messages().list(
             userId="me", q=query, maxResults=max_results
-        ).execute()
+        ).execute(num_retries=RETRIES)
         return [m["id"] for m in resp.get("messages", [])]
 
     def get_message(self, msg_id: str) -> dict:
-        raw = self.service.users().messages().get(userId="me", id=msg_id, format="full").execute()
+        raw = self.service.users().messages().get(userId="me", id=msg_id, format="full").execute(num_retries=RETRIES)
         return self._parse(raw)
 
     def get_thread(self, thread_id: str) -> list[dict]:
-        raw = self.service.users().threads().get(userId="me", id=thread_id, format="full").execute()
+        raw = self.service.users().threads().get(userId="me", id=thread_id, format="full").execute(num_retries=RETRIES)
         return [self._parse(m) for m in raw.get("messages", [])]
 
     def _parse(self, raw: dict) -> dict:
@@ -106,7 +118,7 @@ class GmailClient:
 
     # ---------- labels ----------
     def ensure_labels(self, names: list[str]) -> None:
-        existing = self.service.users().labels().list(userId="me").execute().get("labels", [])
+        existing = self.service.users().labels().list(userId="me").execute(num_retries=RETRIES).get("labels", [])
         self._label_ids = {l["name"]: l["id"] for l in existing}
         for name in names:
             if name not in self._label_ids:
@@ -114,7 +126,7 @@ class GmailClient:
                     userId="me",
                     body={"name": name, "labelListVisibility": "labelShow",
                           "messageListVisibility": "show"},
-                ).execute()
+                ).execute(num_retries=RETRIES)
                 self._label_ids[name] = created["id"]
 
     def add_labels(self, msg_id: str, names: list[str]) -> None:
@@ -122,7 +134,14 @@ class GmailClient:
         if ids:
             self.service.users().messages().modify(
                 userId="me", id=msg_id, body={"addLabelIds": ids}
-            ).execute()
+            ).execute(num_retries=RETRIES)
+
+    def remove_thread_labels(self, thread_id: str, names: list[str]) -> None:
+        ids = [self._label_ids[n] for n in names if n in self._label_ids]
+        if ids:
+            self.service.users().threads().modify(
+                userId="me", id=thread_id, body={"removeLabelIds": ids}
+            ).execute(num_retries=RETRIES)
 
     # ---------- drafts ----------
     def build_reply(self, original: dict, body: str) -> EmailMessage:
@@ -142,5 +161,5 @@ class GmailClient:
         draft = self.service.users().drafts().create(
             userId="me",
             body={"message": {"raw": raw, "threadId": original["thread_id"]}},
-        ).execute()
+        ).execute(num_retries=RETRIES)
         return draft["id"]

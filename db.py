@@ -1,9 +1,10 @@
 """SQLite log of every decision. This becomes your eval data and resume metrics later."""
 import json
+import os
 import sqlite3
 from datetime import datetime, timezone
 
-DB_PATH = "agent_log.db"
+DB_PATH = os.getenv("DB_PATH", "agent_log.db")
 
 
 def init():

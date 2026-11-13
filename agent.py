@@ -85,10 +85,35 @@ careful front-desk assistant. A human reviews every draft before it is sent.
    If an email is mostly answerable but has one part you can't answer, draft the
    parts you can and ALSO call `escalate` explaining what's missing.
 
+# Website contact-form leads
+Some emails are contact-form submissions from the Kingsway website (marked with
+<contact_form/>). The person filled out a form, often with no message at all.
+These are new leads, so ALWAYS draft (category "lead"); never escalate just because
+the message is empty. The draft should:
+- Thank them by first name for reaching out to Kingsway.
+- If they wrote a message, answer it first.
+- Ask which program they're interested in (adult beginner, adult advanced, kids 4-8,
+  teens 9-15) and whether they have any jiu-jitsu experience.
+- Briefly mention how to get started: the adult drop-in/trial link, or for kids and
+  teens, that signup is onsite at the front desk. Keep it to a few short sentences.
+- Invite them to reply or call.
+- If marked <late_reply days="N"/>, this reply is overdue: open with one short,
+  sincere apology for the slow response (no excuses), then continue as above.
+
+# Learning from past staff replies
+You may be shown <past_staff_replies>: real questions and the replies Kingsway staff
+actually sent. Use them to:
+- Match the team's tone, phrasing, and how they handle that kind of question.
+- Answer questions the knowledge base doesn't cover: if staff already answered the
+  same kind of question, draft a reply the same way instead of escalating.
+  (Still escalate anything in `always_escalate`.)
+- The knowledge base ALWAYS wins on prices, times, links, and policies. Past replies
+  may be outdated; never copy a price or time from them that conflicts with it.
+
 # Draft rules
 - Tone: {tone}
 - Answer the question first, in a few short sentences. No marketing fluff.
-- End with a clear next step (trial pass, kids free class, or come in).
+- End with a clear next step (trial pass, kids trial, or come in).
 - Prices: quote exactly as written, always "per 14 days" for memberships. Never
   say "per month" for a membership. Never quote the old website prices.
 - If there is no booking link in the knowledge base, tell them they can reply with
@@ -152,7 +177,7 @@ class EmailAgent:
         self.max_turns = max_turns
 
     @staticmethod
-    def format_email(email: dict, thread: list[dict]) -> str:
+    def format_email(email: dict, thread: list[dict], examples: list[dict] | None = None) -> str:
         earlier = [m for m in thread if m["id"] != email["id"]][-4:]
         history = "\n\n".join(
             f"From: {m['from']}\nDate: {m['date']}\n{m['body'][:1500]}" for m in earlier
@@ -160,10 +185,20 @@ class EmailAgent:
         parts = []
         if history:
             parts.append(f"<earlier_messages_in_thread>\n{history}\n</earlier_messages_in_thread>")
+        if email.get("contact_form"):
+            parts.append("<contact_form/>")
+        if (email.get("late_days") or 0) >= 2:
+            parts.append(f'<late_reply days="{email["late_days"]}"/>')
         parts.append(
             f"<email>\nFrom: {email['from']}\nSubject: {email['subject']}\n"
             f"Date: {email['date']}\n\n{email['body'][:6000]}\n</email>"
         )
+        if examples:
+            shown = "\n\n".join(
+                f"Q ({ex['subject']}): {ex['question'][:1200]}\nStaff reply: {ex['reply'][:1500]}"
+                for ex in examples
+            )
+            parts.append(f"<past_staff_replies>\n{shown}\n</past_staff_replies>")
         parts.append("Handle the email above.")
         return "\n\n".join(parts)
 
@@ -188,9 +223,9 @@ class EmailAgent:
             return "Marked as no reply needed."
         return f"Error: unknown tool {name}."
 
-    def handle(self, email: dict, thread: list[dict]) -> Decision:
+    def handle(self, email: dict, thread: list[dict], examples: list[dict] | None = None) -> Decision:
         decision = Decision()
-        messages = [{"role": "user", "content": self.format_email(email, thread)}]
+        messages = [{"role": "user", "content": self.format_email(email, thread, examples)}]
 
         for _ in range(self.max_turns):
             resp = self.client.messages.create(
