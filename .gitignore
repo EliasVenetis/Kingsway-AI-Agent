@@ -1,7 +1,7 @@
-   .env
-   credentials.json
-   token.json
-   client_secret*.json
-   *.db
-   *.sqlite
-   __pycache__/
+.env
+credentials.json
+token.json
+client_secret*.json
+*.db
+*.sqlite
+__pycache__/
